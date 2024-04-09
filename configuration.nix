@@ -5,7 +5,7 @@
 # NixOS-WSL specific options are documented on the NixOS-WSL repository:
 # https://github.com/nix-community/NixOS-WSL
 
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   imports = [
@@ -15,7 +15,31 @@
 
   wsl.enable = true;
   wsl.defaultUser = "nixos";
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  nix = {
+    settings = {
+      # Enable Flakes and the new command-line tool
+      experimental-features = [ "nix-command" "flakes" ];
+      trusted-users = [ "nixos" ];
+      sandbox = "relaxed";
+      allowed-uris = [
+        "https://"
+        "github:NixOS/"
+        "github:nixos/"
+        "github:hercules-ci/"
+        "github:numtide/"
+        "github:cachix/"
+        "github:nix-community/"
+        "github:nix-systems/"
+      ];
+
+    };
+    package = pkgs.nixVersions.nix_2_19;
+    # NOTE: pin nix's nixpkgs to the exact version of nixpkgs used to build this config
+    registry.nixpkgs.flake = inputs.nixpkgs;
+  };
+
+  virtualisation = { docker.enable = true; };
 
   programs.fish.enable = true;
   users.users.nixos.shell = pkgs.fish;
