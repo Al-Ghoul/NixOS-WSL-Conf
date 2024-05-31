@@ -39,6 +39,9 @@
     registry.nixpkgs.flake = inputs.nixpkgs;
   };
 
+  # Allow non-free licensed programs
+  nixpkgs = { config = { allowUnfree = true; }; };
+
   virtualisation = { docker.enable = true; };
 
   programs.fish.enable = true;
