@@ -19,8 +19,30 @@
             "function() require('ufo').detach() vim.opt_local.foldenable = false end";
         };
       }];
+      extraConfigLua = ''
+        -- resizing splits
+        vim.keymap.set('n', '<A-h>', require('smart-splits').resize_left)
+        vim.keymap.set('n', '<A-j>', require('smart-splits').resize_down)
+        vim.keymap.set('n', '<A-k>', require('smart-splits').resize_up)
+        vim.keymap.set('n', '<A-l>', require('smart-splits').resize_right)
+        -- moving between splits
+        vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
+        vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
+        vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
+        vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
+      '';
       globals = { mapleader = ","; };
       keymaps = [
+        {
+          action = ":Format<CR>";
+          key = "<space>f";
+          mode = "n";
+          options = {
+            silent = true;
+            desc = "Format current buffer";
+          };
+        }
+
         {
           action = ":LazyGit<CR>";
           key = "<leader>lg";
@@ -303,6 +325,7 @@
               cmd = [ "clangd" "--offset-encoding=utf-16" ];
             };
             cmake.enable = true;
+            tsserver.enable = true;
           };
         };
         lint.enable = true;
@@ -352,6 +375,18 @@
               black.enable = true;
               nixfmt.enable = true;
               markdownlint.enable = true;
+            };
+          };
+        };
+
+        smart-splits = {
+          enable = true;
+          settings = {
+            ignored_events = [ "BufEnter" "WinEnter" ];
+            resize_mode = {
+              quit_key = "<ESC>";
+              resize_keys = [ "h" "j" "k" "l" ];
+              silent = true;
             };
           };
         };
