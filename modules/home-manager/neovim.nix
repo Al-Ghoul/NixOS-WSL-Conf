@@ -326,6 +326,7 @@
             };
             cmake.enable = true;
             tsserver.enable = true;
+            zls.enable = true;
           };
         };
         lint.enable = true;
