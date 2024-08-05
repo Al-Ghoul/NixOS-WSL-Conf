@@ -54,10 +54,6 @@
             packages = with pkgs; [ cz-cli yarn ];
 
             pre-commit.hooks = {
-              deadnix.enable = true;
-              nil.enable = true;
-              nixfmt.enable = true;
-
               commitizen.enable = true;
               markdownlint.enable = true;
             };
