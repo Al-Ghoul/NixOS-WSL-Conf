@@ -346,7 +346,6 @@
               { name = "luasnip"; }
               { name = "path"; }
               { name = "buffer"; }
-              { name = "codeium"; }
             ];
             mapping = {
               "<C-Space>" = "cmp.mapping.complete()";
@@ -393,7 +392,7 @@
           };
         };
 
-        codeium-nvim.enable = true;
+        codeium-vim.enable = true;
 
         undotree.enable = true;
         tmux-navigator.enable = true;
