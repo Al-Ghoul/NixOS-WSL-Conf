@@ -45,7 +45,10 @@
   virtualisation = { docker.enable = true; };
 
   programs.fish.enable = true;
-  users.users.nixos.shell = pkgs.fish;
+  users.users.nixos = {
+    shell = pkgs.fish;
+    extraGroups = [ "docker" ];
+  };
   environment.systemPackages = with pkgs; [ git vim ];
 
   # This value determines the NixOS release from which the default
