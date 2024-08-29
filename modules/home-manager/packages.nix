@@ -1,1 +1,3 @@
-{ pkgs, ... }: { home.packages = with pkgs; [ grc lazydocker ]; }
+{ pkgs, ... }: {
+  home.packages = with pkgs; [ grc lazydocker tmux-sessionizer ];
+}
