@@ -319,6 +319,11 @@
             cmake.enable = true;
             tsserver.enable = true;
             zls.enable = true;
+            jsonls.enable = true;
+            pyright.enable = true;
+            astro.enable = true;
+            tailwindcss.enable = true;
+            html.enable = true;
           };
         };
         lint.enable = true;
