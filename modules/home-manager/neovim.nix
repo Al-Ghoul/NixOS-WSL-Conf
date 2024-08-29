@@ -291,17 +291,6 @@
         illuminate.enable = true;
         nvim-ufo.enable = true;
         nvim-colorizer.enable = true;
-        spider = {
-          enable = true;
-          keymaps = {
-            motions = {
-              b = "b";
-              e = "e";
-              ge = "ge";
-              w = "w";
-            };
-          };
-        };
         surround.enable = true;
         rainbow-delimiters.enable = true;
         vim-matchup.enable = true;
