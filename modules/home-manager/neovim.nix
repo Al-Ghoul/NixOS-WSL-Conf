@@ -219,7 +219,10 @@
         modifiable = true;
         encoding = "UTF-8";
       };
-      colorschemes.melange = { enable = true; };
+      colorschemes.nightfox = {
+        enable = true;
+        flavor = "terafox";
+      };
       plugins = {
         startup = {
           enable = true;
