@@ -19,7 +19,7 @@ nix-shell -p git
 sudo mv /etc/nixos /etc/nixos.bak 
 
 # Symlink the repo with the default nixos configuration location
-sudo ln -s ~/repos/NixOS-Conf /etc/nixos
+sudo ln -s ~/repos/NixOS-WSL-Conf /etc/nixos
 
 # Deploy the flake.nix located at the default location (/etc/nixos)
 # which is just a sym link to ~/repos/NixOS-Conf
