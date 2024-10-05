@@ -392,6 +392,7 @@
         codeium-vim.enable = true;
 
         oil.enable = true;
+        web-devicons.enable = true;
 
         undotree.enable = true;
         tmux-navigator.enable = true;
