@@ -391,6 +391,8 @@
 
         codeium-vim.enable = true;
 
+        oil.enable = true;
+
         undotree.enable = true;
         tmux-navigator.enable = true;
         friendly-snippets.enable = true;
