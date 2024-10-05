@@ -291,7 +291,7 @@
         illuminate.enable = true;
         nvim-ufo.enable = true;
         nvim-colorizer.enable = true;
-        surround.enable = true;
+        vim-surround.enable = true;
         rainbow-delimiters.enable = true;
         vim-matchup.enable = true;
         wilder = {
@@ -317,7 +317,7 @@
               cmd = [ "clangd" "--offset-encoding=utf-16" ];
             };
             cmake.enable = true;
-            tsserver.enable = true;
+            ts-ls.enable = true;
             zls.enable = true;
             jsonls.enable = true;
             pyright.enable = true;
