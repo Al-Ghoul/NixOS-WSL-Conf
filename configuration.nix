@@ -20,23 +20,7 @@
     settings = {
       # Enable Flakes and the new command-line tool
       experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "nixos" ];
-      sandbox = "relaxed";
-      allowed-uris = [
-        "https://"
-        "github:NixOS/"
-        "github:nixos/"
-        "github:hercules-ci/"
-        "github:numtide/"
-        "github:cachix/"
-        "github:nix-community/"
-        "github:nix-systems/"
-      ];
-
     };
-    package = pkgs.nixVersions.nix_2_19;
-    # NOTE: pin nix's nixpkgs to the exact version of nixpkgs used to build this config
-    registry.nixpkgs.flake = inputs.nixpkgs;
   };
 
   # Allow non-free licensed programs
