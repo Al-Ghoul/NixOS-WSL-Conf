@@ -1,45 +1,78 @@
-{ pkgs, nixvim, ... }: {
+{pkgs, ...}: {
   programs = {
     nixvim = {
       enable = true;
-      autoCmd = [{
-        event = [ "FileType" ];
-        pattern = [
-          "startup"
-          "dapui_watches"
-          "dap-repl"
-          "dapui_console"
-          "dapui_stacks"
-          "dapui_breakpoints"
-          "dapui_scopes"
-          "help"
-        ];
-        callback = {
-          __raw =
-            "function() require('ufo').detach() vim.opt_local.foldenable = false end";
+      clipboard.providers.wl-copy.enable = true;
+      performance = {
+        byteCompileLua = {
+          enable = true;
+          configs = true;
+          initLua = true;
+          luaLib = true;
+          nvimRuntime = true;
+          plugins = true;
         };
-      }];
+      };
+      lsp = {
+        inlayHints.enable = true;
+        servers = {
+          nixd.enable = true;
+          clangd = {
+            enable = true;
+            settings = {
+              cmd = [
+                "clangd"
+                "--background-index"
+              ];
+              filetypes = [
+                "c"
+                "cpp"
+              ];
+              root_markers = [
+                "compile_commands.json"
+                "compile_flags.txt"
+              ];
+            };
+          };
+          cmake.enable = true;
+          jsonls.enable = true;
+          marksman.enable = true;
+          nginx_language_server.enable = true;
+          zls.enable = true;
+          eslint.enable = true;
+        };
+      };
       extraConfigLua = ''
         -- resizing splits
-        vim.keymap.set('n', '<A-h>', require('smart-splits').resize_left)
-        vim.keymap.set('n', '<A-j>', require('smart-splits').resize_down)
-        vim.keymap.set('n', '<A-k>', require('smart-splits').resize_up)
-        vim.keymap.set('n', '<A-l>', require('smart-splits').resize_right)
-        -- moving between splits
-        vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
-        vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
-        vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
-        vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
+         vim.keymap.set('n', '<A-h>', require('smart-splits').resize_left)
+         vim.keymap.set('n', '<A-j>', require('smart-splits').resize_down)
+         vim.keymap.set('n', '<A-k>', require('smart-splits').resize_up)
+         vim.keymap.set('n', '<A-l>', require('smart-splits').resize_right)
+         -- moving between splits
+         vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
+         vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
+         vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
+         vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
+
+         local harpoon = require("harpoon")
+         harpoon:setup()
+
+         vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
+         vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+         vim.keymap.set("n", "<leader>pp", function() harpoon:list():prev() end)
+         vim.keymap.set("n", "<leader>nn", function() harpoon:list():next() end)
+
+         vim.keymap.set("n", "<space>f", vim.lsp.buf.format, {})
       '';
-      globals = { mapleader = ","; };
+      globals = {mapleader = ",";};
       keymaps = [
         {
-          action = ":Format<CR>";
-          key = "<space>f";
+          action = ":Navbuddy<CR>";
+          key = "<leader>b";
           mode = "n";
           options = {
             silent = true;
-            desc = "Format current buffer";
+            desc = "Open up navbuddy";
           };
         }
 
@@ -182,6 +215,7 @@
           };
         }
       ];
+
       opts = {
         # Tabs / Indentation
         tabstop = 2;
@@ -204,7 +238,7 @@
         signcolumn = "yes";
         cmdheight = 1;
         scrolloff = 10;
-        completeopt = "menu,menuone,noselect";
+        completeopt = "menu,preview,menuone,noselect";
 
         # Behavior
         hidden = true;
@@ -219,27 +253,30 @@
         modifiable = true;
         encoding = "UTF-8";
       };
+
       colorschemes.nightfox = {
         enable = true;
         flavor = "terafox";
+        settings.options.transparent = true;
       };
+
       plugins = {
         startup = {
           enable = true;
-          parts = [ "header" "body" ];
+          parts = ["header" "body"];
           sections = {
             body = {
               align = "center";
               content = [
-                [ " Find File" "FzfLua files" "<leader>ff" ]
-                [ "󰍉 Find Word" "FzfLua live_grep" "<leader>fg" ]
-                [ " Recent Files" "FzfLua oldfiles" "<leader>of" ]
-                [ " Colorschemes" "FzfLua colorschemes" "<leader>cs" ]
-                [ " New File" "lua require'startup'.new_file()" "<leader>nf" ]
+                [" Find File" "FzfLua files" "<leader>ff"]
+                [" Find Word" "FzfLua live_grep" "<leader>fg"]
+                [" Recent Files" "FzfLua oldfiles" "<leader>of"]
+                [" Colorschemes" "FzfLua colorschemes" "<leader>cs"]
+                [" New File" "lua require'startup'.new_file()" "<leader>nf"]
               ];
               defaultColor = "";
               foldSection = false;
-              highlight = "String";
+              highlight = "Statement";
               margin = 5;
               oldfilesAmount = 3;
               title = "Basic Commands";
@@ -247,8 +284,8 @@
             };
             header = {
               align = "center";
-              content = { __raw = "require('startup.headers').hydra_header"; };
-              defaultColor = "";
+              content = {__raw = "require('startup.headers').hydra_header";};
+              defaultColor = "#8BAFE0";
               foldSection = false;
               highlight = "Statement";
               margin = 5;
@@ -258,6 +295,7 @@
             };
           };
         };
+        oil.enable = true;
         nix.enable = true;
         fzf-lua = {
           enable = true;
@@ -268,164 +306,171 @@
             "<leader>fb" = "buffers";
           };
         };
-        harpoon = {
-          enable = true;
-          keymaps = {
-            addFile = "<leader>a";
-            toggleQuickMenu = "<leader>e";
-            navNext = "<leader>pp";
-            navPrev = "<leader>nn";
-          };
-        };
-        airline = {
-          enable = true;
-          settings.theme = "transparent";
-        };
         which-key.enable = true;
         better-escape.enable = true;
         comment.enable = true;
         lastplace.enable = true;
         markdown-preview.enable = true;
-        noice.enable = true;
-        fidget.enable = true;
-        illuminate.enable = true;
-        nvim-ufo.enable = true;
-        nvim-colorizer.enable = true;
-        vim-surround.enable = true;
-        rainbow-delimiters.enable = true;
-        vim-matchup.enable = true;
-        wilder = {
-          enable = true;
-          modes = [ "/" "?" ":" ];
-        };
-
-        treesitter.enable = true;
-        treesitter-context.enable = true;
         navbuddy = {
           enable = true;
           useDefaultMapping = true;
           lsp.autoAttach = true;
         };
-        lspsaga.enable = true;
-
-        lsp = {
+        noice.enable = true;
+        fidget.enable = true;
+        illuminate.enable = true;
+        ccc = {
           enable = true;
-          servers = {
-            nixd.enable = true;
-            clangd = {
-              enable = true;
-              cmd = [ "clangd" "--offset-encoding=utf-16" ];
-            };
-            cmake.enable = true;
-            ts-ls.enable = true;
-            zls.enable = true;
-            jsonls.enable = true;
-            pyright.enable = true;
-            astro.enable = true;
-            tailwindcss.enable = true;
-            html.enable = true;
+          settings = {
+            highlighter.auto_enable = true;
           };
         };
+
+        csvview.enable = true;
+        emmet.enable = true;
+        vim-surround.enable = true;
+        todo-comments.enable = true;
+        treesitter = {
+          enable = true;
+          nixvimInjections = true;
+          settings = {
+            highlight.enable = true;
+            indent.enable = true;
+          };
+        };
+        rainbow-delimiters.enable = true;
+        wilder = {
+          enable = true;
+          modes = ["/" "?" ":"];
+        };
+
+        lspsaga.enable = true;
+        web-devicons.enable = true;
+
         lint.enable = true;
 
+        none-ls = {
+          enable = true;
+          sources = {
+            code_actions = {
+              statix.enable = true;
+            };
+            diagnostics = {
+              deadnix.enable = true;
+              statix.enable = true;
+              actionlint.enable = true;
+              golangci_lint.enable = true;
+            };
+            formatting = {
+              treefmt.enable = true;
+            };
+          };
+        };
+
+        ts-autotag.enable = true;
+
+        friendly-snippets.enable = true;
         luasnip = {
           enable = true;
-          fromVscode = [ { } ];
+          fromVscode = [{}];
         };
 
         cmp = {
           enable = true;
           settings = {
-            snippet.expand =
-              "function(args) require('luasnip').lsp_expand(args.body) end";
             sources = [
-              { name = "nvim_lsp"; }
-              { name = "luasnip"; }
-              { name = "path"; }
-              { name = "buffer"; }
+              {name = "nvim_lsp";}
+              {name = "buffer";}
+              {name = "path";}
+              {name = "luasnip";}
             ];
             mapping = {
               "<C-Space>" = "cmp.mapping.complete()";
               "<C-d>" = "cmp.mapping.scroll_docs(-4)";
               "<C-e>" = "cmp.mapping.close()";
               "<C-f>" = "cmp.mapping.scroll_docs(4)";
-              "<CR>" = "cmp.mapping.confirm({ select = true })";
-              "<S-Tab>" =
-                "cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'})";
-              "<Tab>" =
-                "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
+              "<CR>" = "cmp.mapping.confirm({ select = false })";
+              "<S-Tab>" = "cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'})";
+              "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
             };
           };
         };
-
-        lsp-format.enable = true;
-
-        none-ls = {
-          enable = true;
-          enableLspFormat = true;
-          sources = {
-            diagnostics = {
-              deadnix.enable = true;
-              statix.enable = true;
-              markdownlint.enable = true;
-            };
-            formatting = {
-              black.enable = true;
-              nixfmt.enable = true;
-              markdownlint.enable = true;
-            };
-          };
-        };
-
         smart-splits = {
           enable = true;
           settings = {
-            ignored_events = [ "BufEnter" "WinEnter" ];
+            ignored_events = ["BufEnter" "WinEnter"];
             resize_mode = {
               quit_key = "<ESC>";
-              resize_keys = [ "h" "j" "k" "l" ];
+              resize_keys = ["h" "j" "k" "l"];
               silent = true;
             };
           };
         };
 
-        codeium-vim.enable = true;
-
-        oil.enable = true;
-        web-devicons.enable = true;
+        windsurf-vim = let
+          codeiumPkg = pkgs.codeium.overrideAttrs (prevAttrs: rec {
+            version = "1.46.0";
+            plat = "linux_x64";
+            src = pkgs.fetchurl {
+              name = "${prevAttrs.pname}-${version}.gz";
+              url = "https://github.com/Exafunction/codeium/releases/download/language-server-v${version}/language_server_${plat}.gz";
+              hash = "sha256-wZl6wlR+K53rGeQ75ZVzmzKpiBnp6/UCTNx/iOHscug=";
+            };
+          });
+        in {
+          enable = true;
+          package = pkgs.vimPlugins.windsurf-vim.overrideAttrs (_: _: {
+            version = "git";
+            src = pkgs.fetchFromGitHub {
+              owner = "Exafunction";
+              repo = "codeium.vim";
+              rev = "272c6e2755e8faa90e26bcdcd9fde6b9e61751ea";
+              sha256 = "sha256-V3ePeEysQFvYO7cVlNsbs5WURo15kJrxWIvx5KkGXTQ=";
+            };
+          });
+          settings = {bin = "${codeiumPkg}/bin/codeium_language_server";};
+        };
 
         undotree.enable = true;
-        tmux-navigator.enable = true;
-        friendly-snippets.enable = true;
         transparent = {
           enable = true;
-          settings.extra_groups = [ "Folded" "WhichKeyFloat" "NormalFloat" ];
+          settings.extra_groups = ["Folded" "WhichKeyFloat" "NormalFloat"];
         };
+        neoscroll.enable = true;
+        lazygit.enable = true;
+        mark-radar.enable = true;
+        marks.enable = true;
+        codesnap = {
+          enable = true;
+          settings = {watermark = "AlGhoul";};
+        };
+
+        flash.enable = true;
+        hop.enable = true;
+        cloak.enable = true;
+        harpoon.enable = true;
+        hardtime.enable = true;
+        precognition.enable = true;
       };
+
       extraPlugins = with pkgs.vimPlugins; [
-        lazygit-nvim
         vim-highlightedyank
-        vim-visual-multi
         vim-airline-themes
       ];
+
+      nixpkgs = {
+        config = {
+          allowUnfree = true;
+        };
+      };
     };
 
     ripgrep.enable = true;
     lazygit = {
       enable = true;
       settings = {
-        gui.theme = { lightTheme = false; };
-        customCommands = [{
-          key = "C";
-          command = "git cz";
-          description = "commit with commitizen";
-          context = "files";
-          loadingText = "opening commitizen commit tool";
-          subprocess = true;
-        }];
+        gui.theme = {lightTheme = false;};
       };
     };
-
   };
-
 }
