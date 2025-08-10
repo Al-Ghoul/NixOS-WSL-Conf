@@ -40,29 +40,44 @@
           nginx_language_server.enable = true;
           zls.enable = true;
           eslint.enable = true;
+          glsl_analyzer.enable = true;
         };
       };
       extraConfigLua = ''
         -- resizing splits
-         vim.keymap.set('n', '<A-h>', require('smart-splits').resize_left)
-         vim.keymap.set('n', '<A-j>', require('smart-splits').resize_down)
-         vim.keymap.set('n', '<A-k>', require('smart-splits').resize_up)
-         vim.keymap.set('n', '<A-l>', require('smart-splits').resize_right)
-         -- moving between splits
-         vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
-         vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
-         vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
-         vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
+        vim.keymap.set('n', '<A-h>', require('smart-splits').resize_left)
+        vim.keymap.set('n', '<A-j>', require('smart-splits').resize_down)
+        vim.keymap.set('n', '<A-k>', require('smart-splits').resize_up)
+        vim.keymap.set('n', '<A-l>', require('smart-splits').resize_right)
+        -- moving between splits
+        vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
+        vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
+        vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
+        vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
 
-         local harpoon = require("harpoon")
-         harpoon:setup()
+        local harpoon = require("harpoon")
+        harpoon:setup()
 
-         vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
-         vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
-         vim.keymap.set("n", "<leader>pp", function() harpoon:list():prev() end)
-         vim.keymap.set("n", "<leader>nn", function() harpoon:list():next() end)
+        vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
+        vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+        vim.keymap.set("n", "<leader>pp", function() harpoon:list():prev() end)
+        vim.keymap.set("n", "<leader>nn", function() harpoon:list():next() end)
 
-         vim.keymap.set("n", "<space>f", vim.lsp.buf.format, {})
+        vim.keymap.set("n", "<space>f", vim.lsp.buf.format, {})
+
+        -- fixes glsl_analyzer\'s filetype detection (filetypes attr doesn\'t seem to work for some reason)
+        vim.filetype.add({
+          extension = {
+            ["vert"] = "glsl",
+            ["tesc"] = "glsl",
+            ["tese"] = "glsl",
+            ["frag"] = "glsl",
+            ["geom"] = "glsl",
+            ["comp"] = "glsl",
+            ["vs"] = "glsl",
+            ["fs"] = "glsl",
+          },
+        })
       '';
       globals = {mapleader = ",";};
       keymaps = [
@@ -451,6 +466,8 @@
         harpoon.enable = true;
         hardtime.enable = true;
         precognition.enable = true;
+
+        nvim-ufo.enable = true;
       };
 
       extraPlugins = with pkgs.vimPlugins; [
