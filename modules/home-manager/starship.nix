@@ -1,4 +1,4 @@
-{ lib, ... }: {
+{lib, ...}: {
   programs.starship = {
     enable = true;
     enableFishIntegration = true;
@@ -21,7 +21,7 @@
 
       directory = {
         style = "fg:#e3e5e5 bg:#637783";
-        format = lib.concatStrings [ "[ $path ]" "($style)" ];
+        format = lib.concatStrings ["[ $path ]" "($style)"];
         truncation_length = 3;
         truncation_symbol = "…/";
       };
@@ -49,7 +49,6 @@
           "($style)"
         ];
       };
-
     };
   };
 }

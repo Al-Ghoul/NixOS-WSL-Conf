@@ -1,4 +1,4 @@
-{ ... }: {
+{...}: {
   imports = [
     ./modules/home-manager/packages.nix
     ./modules/home-manager/direnv.nix
@@ -7,8 +7,10 @@
     ./modules/home-manager/starship.nix
     ./modules/home-manager/nixvim.nix
   ];
-  home.username = "nixos";
-  home.homeDirectory = "/home/nixos";
-  home.stateVersion = "23.11";
+  home = {
+    username = "nixos";
+    homeDirectory = "/home/nixos";
+    stateVersion = "23.11";
+  };
   programs.home-manager.enable = true;
 }

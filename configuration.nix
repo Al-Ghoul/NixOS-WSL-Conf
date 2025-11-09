@@ -1,13 +1,9 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
 # NixOS-WSL specific options are documented on the NixOS-WSL repository:
 # https://github.com/nix-community/NixOS-WSL
-
-{ pkgs, inputs, ... }:
-
-{
+{pkgs, ...}: {
   imports = [
     # include NixOS-WSL modules
     <nixos-wsl/modules>
@@ -19,21 +15,21 @@
   nix = {
     settings = {
       # Enable Flakes and the new command-line tool
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = ["nix-command" "flakes"];
     };
   };
 
   # Allow non-free licensed programs
-  nixpkgs = { config = { allowUnfree = true; }; };
+  nixpkgs = {config = {allowUnfree = true;};};
 
-  virtualisation = { docker.enable = true; };
+  virtualisation = {docker.enable = true;};
 
   programs.fish.enable = true;
   users.users.nixos = {
     shell = pkgs.fish;
-    extraGroups = [ "docker" ];
+    extraGroups = ["docker"];
   };
-  environment.systemPackages = with pkgs; [ git vim ];
+  environment.systemPackages = with pkgs; [git vim];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

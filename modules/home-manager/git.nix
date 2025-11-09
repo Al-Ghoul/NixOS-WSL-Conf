@@ -6,7 +6,7 @@ _: {
         name = "Abdo .AlGhoul";
         email = "Abdo.AlGhouul@gmail.com";
       };
-      url = { "ssh://git@github.com" = { insteadOf = "https://github.com"; }; };
+      url = {"ssh://git@github.com" = {insteadOf = "https://github.com";};};
     };
   };
 }

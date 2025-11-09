@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   programs = {
     fish = {
       enable = true;
@@ -19,9 +19,9 @@
       ];
     };
 
-    fzf = { enable = true; };
+    fzf = {enable = true;};
 
-    zoxide = { enable = true; };
+    zoxide = {enable = true;};
 
     tmux = {
       enable = true;
@@ -31,7 +31,7 @@
           plugin = rose-pine;
           extraConfig = ''
             set -g @rose_pine_variant 'main' # Options are 'main', 'moon' or 'dawn'
-            set -g @rose_pine_bar_bg_disable 'on' 
+            set -g @rose_pine_bar_bg_disable 'on'
             set -g @rose_pine_bar_bg_disabled_color_option 'default'
           '';
         }
@@ -44,7 +44,7 @@
         }
 
         {
-          plugin = mkTmuxPlugin rec {
+          plugin = mkTmuxPlugin {
             pluginName = "tmux-pomodoro-plus";
             version = "1.0.2";
             src = pkgs.fetchFromGitHub {
@@ -83,7 +83,7 @@
           '';
         }
 
-        { plugin = vim-tmux-navigator; }
+        {plugin = vim-tmux-navigator;}
       ];
 
       extraConfig = ''
@@ -114,6 +114,5 @@
         bind-key -T copy-mode-vi 'C-\' select-pane -l
       '';
     };
-
   };
 }

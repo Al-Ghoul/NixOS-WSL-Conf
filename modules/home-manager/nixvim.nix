@@ -322,7 +322,6 @@
           };
         };
         which-key.enable = true;
-        better-escape.enable = true;
         comment.enable = true;
         lastplace.enable = true;
         markdown-preview.enable = true;
@@ -467,8 +466,6 @@
         harpoon.enable = true;
         hardtime.enable = true;
         precognition.enable = true;
-
-        nvim-ufo.enable = true;
       };
 
       extraPlugins = with pkgs.vimPlugins; [
