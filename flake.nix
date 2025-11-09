@@ -3,62 +3,64 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixvim = { url = "github:nix-community/nixvim"; };
-    devenv.url = "github:cachix/devenv";
+
+    nixvim = {url = "github:nix-community/nixvim";};
+
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   nixConfig = {
-    extra-trusted-public-keys =
-      "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=";
+    extra-trusted-public-keys = "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=";
     extra-substituters = "https://devenv.cachix.org";
   };
 
-  outputs = { nixpkgs, home-manager, devenv, nixvim, ... }@inputs:
-    let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
-    in {
-      nixosConfigurations = {
-        nixos = nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = { inherit inputs; };
+  outputs = {
+    self,
+    nixpkgs,
+    home-manager,
+    nixvim,
+    treefmt-nix,
+    systems,
+    ...
+  } @ inputs: let
+    system = "x86_64-linux";
+    eachSystem = f: nixpkgs.lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
 
-          modules = [
-            ./configuration.nix
-
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useUserPackages = true;
-              home-manager.useGlobalPkgs = true;
-              home-manager.users.nixos = {
-                imports = [ ./home.nix nixvim.homeModules.nixvim ];
-              };
-            }
-          ];
-        };
-      };
-
-      devShells."${system}".default = devenv.lib.mkShell {
-        inherit inputs pkgs;
+    treefmtEval = eachSystem (pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
+  in {
+    nixosConfigurations = {
+      nixos = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs;};
 
         modules = [
-          ({ ... }: {
+          ./configuration.nix
 
-            packages = with pkgs; [ cz-cli yarn ];
-
-            pre-commit.hooks = {
-              commitizen.enable = true;
-              markdownlint.enable = true;
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useUserPackages = true;
+              useGlobalPkgs = true;
+              users.nixos = {
+                imports = [./home.nix nixvim.homeModules.nixvim];
+              };
             };
-
-          })
+          }
         ];
-
       };
-
     };
+
+    formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
+    checks = eachSystem (pkgs: {
+      formatting = treefmtEval.${pkgs.system}.config.build.check self;
+    });
+  };
 }
