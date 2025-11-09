@@ -5,7 +5,7 @@
     ./modules/home-manager/shell.nix
     ./modules/home-manager/git.nix
     ./modules/home-manager/starship.nix
-    ./modules/home-manager/neovim.nix
+    ./modules/home-manager/nixvim.nix
   ];
   home.username = "nixos";
   home.homeDirectory = "/home/nixos";
