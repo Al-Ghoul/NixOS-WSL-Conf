@@ -278,8 +278,8 @@
       plugins = {
         startup = {
           enable = true;
-          parts = ["header" "body"];
-          sections = {
+          settings = {
+            parts = ["header" "body"];
             body = {
               align = "center";
               content = [
@@ -328,8 +328,9 @@
         markdown-preview.enable = true;
         navbuddy = {
           enable = true;
-          useDefaultMapping = true;
-          lsp.autoAttach = true;
+          settings = {
+            lsp.auto_attach = true;
+          };
         };
         noice.enable = true;
         fidget.enable = true;
@@ -356,7 +357,7 @@
         rainbow-delimiters.enable = true;
         wilder = {
           enable = true;
-          modes = ["/" "?" ":"];
+          settings.modes = ["/" "?" ":"];
         };
 
         lspsaga.enable = true;

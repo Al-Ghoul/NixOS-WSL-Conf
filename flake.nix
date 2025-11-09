@@ -35,7 +35,7 @@
               home-manager.useUserPackages = true;
               home-manager.useGlobalPkgs = true;
               home-manager.users.nixos = {
-                imports = [ ./home.nix nixvim.homeManagerModules.nixvim ];
+                imports = [ ./home.nix nixvim.homeModules.nixvim ];
               };
             }
           ];
